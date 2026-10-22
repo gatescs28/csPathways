@@ -1,0 +1,469 @@
+{
+  "collected": "2026-10-21",
+  "groups": [
+    {
+      "name": "Undergraduate courses",
+      "source": "WFU Undergraduate Bulletin 2026-2027",
+      "url": "https://bulletin.wfu.edu/undergraduate/departments-programs/computer-science/",
+      "items": [
+        {
+          "code": "CSC 101",
+          "title": "Overview of Computer Science"
+        },
+        {
+          "code": "CSC 102",
+          "title": "Problem Solving with Python"
+        },
+        {
+          "code": "CSC 103",
+          "title": "Introduction to Web and Mobile Applications"
+        },
+        {
+          "code": "CSC 111",
+          "title": "Introduction to Computer Science"
+        },
+        {
+          "code": "CSC 112",
+          "title": "Fundamentals of Computer Science"
+        },
+        {
+          "code": "CSC 165",
+          "title": "Problem Solving Seminar"
+        },
+        {
+          "code": "CSC 181",
+          "title": "Introduction to Computer Science Research"
+        },
+        {
+          "code": "CSC 191",
+          "title": "Special Topics"
+        },
+        {
+          "code": "CSC 193",
+          "title": "Independent Study"
+        },
+        {
+          "code": "CSC 195",
+          "title": "Data Visualization"
+        },
+        {
+          "code": "CSC 196",
+          "title": "Introduction To High Performance Computing"
+        },
+        {
+          "code": "CSC 201",
+          "title": "Data Structures and Algorithms"
+        },
+        {
+          "code": "CSC 231",
+          "title": "Programming Languages"
+        },
+        {
+          "code": "CSC 250",
+          "title": "Computer Systems I"
+        },
+        {
+          "code": "CSC 251",
+          "title": "Computer Systems II"
+        },
+        {
+          "code": "CSC 270",
+          "title": "Foundations of Artificial Intelligence"
+        },
+        {
+          "code": "CSC 280",
+          "title": "Computing Ethics"
+        },
+        {
+          "code": "CSC 301",
+          "title": "Algorithm Design and Analysis"
+        },
+        {
+          "code": "CSC 311",
+          "title": "Computer Architecture"
+        },
+        {
+          "code": "CSC 321",
+          "title": "Database Management Systems"
+        },
+        {
+          "code": "CSC 322",
+          "title": "Data Management and Analytics"
+        },
+        {
+          "code": "CSC 331",
+          "title": "Software Engineering"
+        },
+        {
+          "code": "CSC 332",
+          "title": "Mobile and Pervasive Computing"
+        },
+        {
+          "code": "CSC 333",
+          "title": "Principles of Translators for Compilers and Interpreters"
+        },
+        {
+          "code": "CSC 341",
+          "title": "Operating Systems"
+        },
+        {
+          "code": "CSC 343",
+          "title": "Internet Protocols"
+        },
+        {
+          "code": "CSC 345",
+          "title": "Cloud Platforms and Services"
+        },
+        {
+          "code": "CSC 346",
+          "title": "Parallel Computation"
+        },
+        {
+          "code": "CSC 347",
+          "title": "GPU Programming"
+        },
+        {
+          "code": "CSC 348",
+          "title": "Computer Security"
+        },
+        {
+          "code": "CSC 352",
+          "title": "Numerical Linear Algebra"
+        },
+        {
+          "code": "CSC 355",
+          "title": "Introduction to Numerical Methods"
+        },
+        {
+          "code": "CSC 371",
+          "title": "Artificial Intelligence"
+        },
+        {
+          "code": "CSC 373",
+          "title": "Data Mining"
+        },
+        {
+          "code": "CSC 374",
+          "title": "Machine Learning"
+        },
+        {
+          "code": "CSC 375",
+          "title": "Neural Networks and Deep Learning"
+        },
+        {
+          "code": "CSC 376",
+          "title": "Reinforcement Learning"
+        },
+        {
+          "code": "CSC 385",
+          "title": "Bioinformatics"
+        },
+        {
+          "code": "CSC 387",
+          "title": "Computational Systems Biology"
+        },
+        {
+          "code": "CSC 391",
+          "title": "Selected Topics"
+        },
+        {
+          "code": "CSC 393",
+          "title": "Individual Study"
+        },
+        {
+          "code": "CSC 399",
+          "title": "Computer Science Mastery Exam"
+        }
+      ]
+    },
+    {
+      "name": "Undergraduate special topics",
+      "source": "WFU CS Department",
+      "url": "https://cs.wfu.edu/undergraduate/undergraduate-course-descriptions/",
+      "items": [
+        {
+          "code": "CSC 191",
+          "title": "Data Visualization"
+        },
+        {
+          "code": "CSC 191",
+          "title": "Ethics of Emerging Technologies"
+        },
+        {
+          "code": "CSC 191",
+          "title": "Interaction Design – Principles of Human-Centered Design"
+        },
+        {
+          "code": "CSC 191",
+          "title": "Introduction to High Performance Computing"
+        },
+        {
+          "code": "CSC 191",
+          "title": "MATLAB"
+        },
+        {
+          "code": "CSC 191",
+          "title": "Unix Systems Programming"
+        },
+        {
+          "code": "CSC 391",
+          "title": "Algorithms in Bioinformatics"
+        },
+        {
+          "code": "CSC 391",
+          "title": "Computer Vision"
+        },
+        {
+          "code": "CSC 391",
+          "title": "Cloud Computing Platforms and Services"
+        },
+        {
+          "code": "CSC 391",
+          "title": "Ethical Computer Science"
+        },
+        {
+          "code": "CSC 391",
+          "title": "Large Language Models"
+        },
+        {
+          "code": "CSC 391",
+          "title": "Natural Language Processing"
+        },
+        {
+          "code": "CSC 391",
+          "title": "Reinforcement Learning"
+        }
+      ]
+    },
+    {
+      "name": "Graduate courses",
+      "source": "WFU Graduate Bulletin 2026-2027",
+      "url": "https://bulletin.wfu.edu/graduate/courses-az/csc/",
+      "items": [
+        {
+          "code": "CSC 611",
+          "title": "Computer Architecture"
+        },
+        {
+          "code": "CSC 621",
+          "title": "Database Management Systems"
+        },
+        {
+          "code": "CSC 622",
+          "title": "Data Management and Analytics"
+        },
+        {
+          "code": "CSC 631",
+          "title": "Software Engineering"
+        },
+        {
+          "code": "CSC 632",
+          "title": "Mobile and Pervasive Computing"
+        },
+        {
+          "code": "CSC 633",
+          "title": "Principles of Translators for Compilers and Interpreters"
+        },
+        {
+          "code": "CSC 641",
+          "title": "Operating Systems"
+        },
+        {
+          "code": "CSC 643",
+          "title": "Internet Protocols"
+        },
+        {
+          "code": "CSC 645",
+          "title": "Cloud Platforms and Services"
+        },
+        {
+          "code": "CSC 646",
+          "title": "Parallel Computation"
+        },
+        {
+          "code": "CSC 647",
+          "title": "GPU Programming"
+        },
+        {
+          "code": "CSC 648",
+          "title": "Computer Security"
+        },
+        {
+          "code": "CSC 652",
+          "title": "Numerical Linear Algebra"
+        },
+        {
+          "code": "CSC 655",
+          "title": "Introduction to Numerical Methods"
+        },
+        {
+          "code": "CSC 671",
+          "title": "Artificial Intelligence"
+        },
+        {
+          "code": "CSC 673",
+          "title": "Data Mining"
+        },
+        {
+          "code": "CSC 674",
+          "title": "Machine Learning"
+        },
+        {
+          "code": "CSC 675",
+          "title": "Neural Networks and Deep Learning"
+        },
+        {
+          "code": "CSC 676",
+          "title": "Reinforcement Learning"
+        },
+        {
+          "code": "CSC 685",
+          "title": "Bioinformatics"
+        },
+        {
+          "code": "CSC 687",
+          "title": "Computational Systems Biology"
+        },
+        {
+          "code": "CSC 691",
+          "title": "Selected Topics"
+        },
+        {
+          "code": "CSC 693",
+          "title": "Individual Study"
+        },
+        {
+          "code": "CSC 702",
+          "title": "Theory of Computation"
+        },
+        {
+          "code": "CSC 721",
+          "title": "Theory of Algorithms"
+        },
+        {
+          "code": "CSC 726",
+          "title": "Parallel Algorithms"
+        },
+        {
+          "code": "CSC 731",
+          "title": "Compiler Optimization"
+        },
+        {
+          "code": "CSC 743",
+          "title": "Topics in Operating Systems"
+        },
+        {
+          "code": "CSC 753",
+          "title": "Nonlinear Optimization"
+        },
+        {
+          "code": "CSC 754",
+          "title": "Numerical Methods for Partial Differential Equations"
+        },
+        {
+          "code": "CSC 765",
+          "title": "Image Processing"
+        },
+        {
+          "code": "CSC 766",
+          "title": "Pattern Recognition"
+        },
+        {
+          "code": "CSC 767",
+          "title": "Computer Vision"
+        },
+        {
+          "code": "CSC 775",
+          "title": "Neural Networks"
+        },
+        {
+          "code": "CSC 779",
+          "title": "Topics in Artificial Intelligence"
+        },
+        {
+          "code": "CSC 781",
+          "title": "Computer Science Seminar"
+        },
+        {
+          "code": "CSC 790",
+          "title": "Advanced Topics"
+        },
+        {
+          "code": "CSC 791",
+          "title": "Thesis Research I"
+        },
+        {
+          "code": "CSC 792",
+          "title": "Thesis Research II"
+        },
+        {
+          "code": "CSC 795",
+          "title": "Project"
+        },
+        {
+          "code": "CSC 796",
+          "title": "Internship"
+        }
+      ]
+    },
+    {
+      "name": "Graduate selected and advanced topics",
+      "source": "WFU CS Department",
+      "url": "https://cs.wfu.edu/graduate/selected-advanced-topics/",
+      "items": [
+        {
+          "code": "CSC 691",
+          "title": "Cloud Computing"
+        },
+        {
+          "code": "CSC 691",
+          "title": "Computer Vision"
+        },
+        {
+          "code": "CSC 691",
+          "title": "Ethical Computer Science"
+        },
+        {
+          "code": "CSC 691",
+          "title": "Large Language Models"
+        },
+        {
+          "code": "CSC 691",
+          "title": "Natural Language Processing"
+        },
+        {
+          "code": "CSC 691",
+          "title": "Reinforcement Learning"
+        },
+        {
+          "code": "CSC 790",
+          "title": "Advanced Software Engineering"
+        },
+        {
+          "code": "CSC 790",
+          "title": "AI for Health"
+        },
+        {
+          "code": "CSC 790",
+          "title": "Data-Centric AI"
+        },
+        {
+          "code": "CSC 790",
+          "title": "Network Security"
+        },
+        {
+          "code": "CSC 790",
+          "title": "Parallel Numerical Optimization"
+        },
+        {
+          "code": "CSC 790",
+          "title": "Safety and Explainability in Reinforcement Learning and Multi-Agent Reinforcement Learning"
+        },
+        {
+          "code": "CSC 790",
+          "title": "Science-guided Machine Learning"
+        }
+      ]
+    }
+  ]
+}

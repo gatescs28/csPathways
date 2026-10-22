@@ -1,4 +1,4 @@
-# csPathways
+# CourseMap
 
 A free tool that helps Wake Forest University students connect the careers they want to the classes and skills that will get them there.
 
@@ -13,12 +13,12 @@ A free tool that helps Wake Forest University students connect the careers they 
 ## Layout
 ```
 csPathways/
-├── frontend/      React + Vite site (empty until Phase 3)
-├── backend/       Python + FastAPI API and SQL database (empty until Phase 3)
+├── frontend/      React + Vite site (header, plus Dashboard, Courses, Careers, and Course List tabs, and empty Skill Groupings, ACM, and Source Analysis tabs, and a login icon that opens a blank Login page, so far)
+├── backend/       Python + FastAPI API and PostgreSQL database (empty until Phase 3)
 ├── data/
 │   ├── courses/   WFU CS course log
 │   └── careers/   CS career list
-└── docs/
-    ├── research/      background reading notes
-    └── data-sources/  reviews of candidate data sources
+├── docs/
+│   └── data-sources/  reviews of candidate data sources
+└── research/      initial research and data-collection lists (not program data)
 ```

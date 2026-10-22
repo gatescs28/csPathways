@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 500" fill="none">
+  <title>CourseMap: Logo 2 — purple gradient</title>
+  <defs>
+    <linearGradient id="purple-gradient" gradientUnits="userSpaceOnUse" x1="130" y1="70" x2="560" y2="440">
+      <stop offset="0" stop-color="#bd7cf4"/>
+      <stop offset="0.5" stop-color="#8750f5"/>
+      <stop offset="1" stop-color="#535cf6"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#purple-gradient)" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke-width="20" d="M 80,124 Q 80,110 94,103 L 211,39 Q 220,34 230,39 L 370,108 L 535,38 Q 580,20 580,68 L 580,338 Q 580,350 567,357 L 370,460 L 220,390 L 113,422 Q 80,432 80,398 Z"/>
+    <path stroke-width="13" d="M 220,39 V 175 M 220,238 V 304 M 220,362 V 390 M 370,108 V 216 M 370,330 V 460"/>
+    <path stroke-width="20" d="M 183,202 C 252,202 292,246 329,262 M 183,341 C 247,341 295,308 330,290 M 401,266 C 450,249 474,216 491,188"/>
+    <circle stroke-width="20" cx="150" cy="200" r="33"/>
+    <circle stroke-width="20" cx="150" cy="342" r="33"/>
+    <circle stroke-width="20" cx="363" cy="277" r="34"/>
+    <circle stroke-width="20" cx="508" cy="162" r="37"/>
+  </g>
+</svg>
