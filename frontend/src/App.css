@@ -14,8 +14,13 @@
   border-bottom: 1px solid #e5e5e5;
 }
 
-.site-heading {
+/* Holds the brand and its menu; as wide as the brand, so the menu matches it. */
+.brand-area {
+  position: relative;
   justify-self: start;
+}
+
+.site-heading {
   margin: 0;
   font-size: inherit;
   font-weight: inherit;
@@ -48,7 +53,85 @@ button.brand {
 .header.home .brand {
   padding: 4px 24px 4px 30px;
   border: 1px solid #d4d4d4;
-  border-radius: 999px;
+  /* Half the pill's 54px height, so the corners can ease square when the menu opens. */
+  border-radius: 27px;
+  background: #fff;
+  /* A light shadow lifts the pill off the page, like the tab bar. */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.06);
+  /* On closing, the corners wait for the menu to slide back up before rounding. */
+  transition:
+    border-radius 0.12s ease 0.22s,
+    border-bottom-color 0s linear 0.3s;
+}
+
+/* Dashboard's brand menu: the tab bar's options, stacked under the brand pill.
+   The z-index keeps it above the course map. */
+.brand-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 3px;
+  border: 1px solid #d4d4d4;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  /* Closed, it's clipped away from the bottom up, so opening slides it down out
+     of the brand. The clip reaches past the sides and bottom for the shadow. */
+  clip-path: inset(0 -16px 100% -16px);
+  visibility: hidden;
+  transition:
+    clip-path 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0s linear 0.3s;
+}
+
+.brand-area.open .brand-menu {
+  clip-path: inset(0 -16px -24px -16px);
+  visibility: visible;
+  transition: clip-path 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.brand-menu .tab {
+  text-align: left;
+}
+
+.brand-menu .tab:hover {
+  background: #f0f0f0;
+}
+
+/* The page that's showing, in a soft blue pill. */
+.brand-menu .tab.active {
+  background: #dcebfd;
+}
+
+/* While the brand is a pill, the menu grows out of its bottom as one shape:
+   the pill squares off below and the menu picks up its sides. The shadow only
+   falls below, so it doesn't spill onto the pill. */
+.header.home .brand-area.open .brand {
+  border-bottom-color: transparent;
+  border-radius: 27px 27px 0 0;
+  transition: border-radius 0.12s ease;
+}
+
+.header.home .brand-menu {
+  top: 100%;
+  border-top: none;
+  border-radius: 0 0 27px 27px;
+  padding: 12px 3px 8px;
+  box-shadow: 0 8px 12px -6px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header.home .brand,
+  .brand-menu {
+    transition: none !important;
+  }
 }
 
 /* Sits in the header's empty right column, sized to fit inside the 44px row. */
@@ -107,6 +190,11 @@ button.brand {
   padding: 3px;
   border: 1px solid #d4d4d4;
   border-radius: 999px;
+  background: #fff;
+  /* A light shadow lifts the bar off the page. */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .tab {
@@ -143,14 +231,37 @@ button.brand {
   font-weight: 600;
 }
 
+/* The Courses page's search box, sized to the side panel. */
+.search-field.sidebar-search {
+  width: 100%;
+  margin-top: 16px;
+}
+
+/* The course selected on the map. */
+.sidebar-subtitle {
+  margin: 20px 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.sidebar-subtitle-code {
+  display: block;
+  margin-bottom: 2px;
+  color: #5a5a5a;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
 .main {
   position: relative;
   flex: 1;
+  min-width: 0;
 }
 
-/* Dashboard course map: fills the main area. Drawn like the logo, with hollow
-   blue rings for courses and lighter blue lines between them, shaded and
-   layered by depth. Drag to pan, scroll or pinch to zoom. */
+/* Dashboard course map: a 3D model that fills the main area. Drawn like the
+   logo, with hollow blue rings for courses and lighter blue lines between them.
+   Drag to turn it, scroll or pinch to zoom. */
 .network {
   position: absolute;
   inset: 0;
@@ -168,6 +279,16 @@ button.brand {
   display: block;
 }
 
+/* Fades out while the model is being turned, and back in after. */
+.network-shadow {
+  fill: url(#network-shadow);
+  transition: opacity 0.3s ease;
+}
+
+.network.dragging .network-shadow {
+  opacity: 0;
+}
+
 .network-links path {
   fill: none;
   stroke: #8ebdf7;
@@ -175,8 +296,8 @@ button.brand {
   stroke-linecap: round;
 }
 
-/* The hovered node's links, drawn over the rest in Logo 2's gradient. */
-.network-links-hovered path {
+/* The hovered and selected nodes' links, drawn over the rest in Logo 2's gradient. */
+.network-links-active path {
   fill: none;
   stroke-width: 2.5;
   stroke-linecap: round;
@@ -186,32 +307,27 @@ button.brand {
   fill: transparent;
 }
 
-/* A soft shadow under each node, so it seems to float above the page. */
-.node-shadow {
-  fill: url(#node-shadow);
-}
-
 /* Farther nodes fade toward the page color, like haze. */
 .node-haze {
   fill: #fff;
   pointer-events: none;
 }
 
-.network-node.hovered .node-haze {
+.network-node.active .node-haze {
   opacity: 0;
 }
 
 .node-ring {
-  fill: url(#node-fill);
-  stroke: url(#node-blue);
+  fill: #fff;
+  stroke: #398df3;
   stroke-width: 3;
   transform-box: fill-box;
   transform-origin: center;
   transition: transform 0.25s ease;
 }
 
-/* The hovered node takes Logo 2's purple gradient and glows. */
-.network-node.hovered .node-ring {
+/* The hovered and selected nodes take Logo 2's purple gradient and glow. */
+.network-node.active .node-ring {
   stroke: url(#node-gradient);
   filter: url(#node-glow);
   transform: scale(1.35);
@@ -236,6 +352,69 @@ button.brand {
 .network-label-code {
   color: #5a5a5a;
   font-variant-numeric: tabular-nums;
+}
+
+/* Shows the hovered course in the top right corner. The rest is left blank for now. */
+.network-panel {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 300px;
+  height: 380px;
+  max-width: calc(100% - 48px);
+  max-height: calc(100% - 48px);
+  padding: 18px 20px;
+  box-sizing: border-box;
+  pointer-events: none;
+  border: 1px solid #d4d4d4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.network-panel-code {
+  color: #5a5a5a;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.network-panel-title {
+  margin-top: 4px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+/* Dashboard page: a panel in the main area holding a small map of a few
+   connected nodes, drawn like the course map. */
+.dashboard-page {
+  padding: 24px 32px;
+}
+
+.dashboard-map {
+  padding: 24px;
+  border: 1px solid #d4d4d4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-map svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+}
+
+.dashboard-map-links line {
+  stroke: #8ebdf7;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.dashboard-map-node {
+  fill: #fff;
+  stroke: #398df3;
+  stroke-width: 3;
 }
 
 .split {

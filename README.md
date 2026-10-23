@@ -13,7 +13,7 @@ A free tool that helps Wake Forest University students connect the careers they 
 ## Layout
 ```
 csPathways/
-├── frontend/      React + Vite site (header, plus Dashboard, Courses, Careers, and Course List tabs, and empty Skill Groupings, ACM, and Source Analysis tabs, and a login icon that opens a blank Login page, so far)
+├── frontend/      React + Vite site (header, plus Map, Courses, Careers, Course List, and Dashboard tabs, and empty Skill Groupings, ACM, and Source Analysis tabs, and a login icon that opens a blank Login page, so far)
 ├── backend/       Python + FastAPI API and PostgreSQL database (empty until Phase 3)
 ├── data/
 │   ├── courses/   WFU CS course log
