@@ -4,6 +4,150 @@
   min-height: 100vh;
 }
 
+/* ACM page: the whole window is a light glowing behind a pane of frosted glass,
+   with no header bar. The first layer is the light, a narrow column of warm
+   glows close together, running from the top of the window to the bottom, and
+   two dark spots beside it. The second is the glass over the whole window: it
+   blurs the light, and a pale sheen and faint streaks catch it like a liquid
+   surface. Both are fixed so they fill the window, behind the page's content. */
+.app.acm {
+  position: relative;
+  isolation: isolate;
+}
+
+.app.acm::before,
+.app.acm::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Larger than the window, so its edges stay hidden as it drifts. */
+.app.acm::before {
+  z-index: -2;
+  inset: -8%;
+  background:
+    radial-gradient(ellipse 6% 10% at 44% 72%, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0) 70%),
+    radial-gradient(ellipse 5% 9% at 77% 28%, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0) 70%),
+    radial-gradient(ellipse 6% 18% at 58% 34%, #ffffff, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(ellipse 6% 16% at 66% 64%, #ffffff, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(ellipse 10% 50% at 60% 48%, #fffaf0, rgba(255, 250, 240, 0) 72%),
+    radial-gradient(ellipse 14% 28% at 63% 12%, rgba(255, 150, 130, 1), rgba(255, 150, 130, 0) 70%),
+    radial-gradient(ellipse 18% 40% at 58% 34%, rgba(255, 176, 70, 1), rgba(255, 176, 70, 0) 72%),
+    radial-gradient(ellipse 16% 38% at 66% 64%, rgba(255, 122, 82, 1), rgba(255, 122, 82, 0) 72%),
+    radial-gradient(ellipse 15% 30% at 56% 88%, rgba(255, 204, 84, 1), rgba(255, 204, 84, 0) 72%),
+    #faf8f5;
+  animation: acm-light-drift 24s ease-in-out infinite alternate;
+}
+
+.app.acm::after {
+  z-index: -1;
+  background:
+    /* A glossy reflection across the top of the pane, like light on a curved surface. */
+    radial-gradient(ellipse 90% 38% at 40% -6%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%),
+    /* Two crisp diagonal streaks where the pane catches the light. */
+    linear-gradient(
+      118deg,
+      rgba(255, 255, 255, 0) 36%,
+      rgba(255, 255, 255, 0.5) 41%,
+      rgba(255, 255, 255, 0.12) 44%,
+      rgba(255, 255, 255, 0) 50%
+    ),
+    linear-gradient(
+      118deg,
+      rgba(255, 255, 255, 0) 58%,
+      rgba(255, 255, 255, 0.32) 61%,
+      rgba(255, 255, 255, 0) 64%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  /* The edges of the pane catch the light: a bright rim along the top and bottom
+     and a soft glow just inside. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 80px rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(36px) saturate(170%) brightness(1.14);
+  -webkit-backdrop-filter: blur(36px) saturate(170%) brightness(1.14);
+}
+
+/* The light slowly shifts behind the glass. */
+@keyframes acm-light-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(-3%, 2%) scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app.acm::before {
+    animation: none;
+  }
+}
+
+/* The header's bar goes away, leaving the brand and the tabs on the glass. The
+   tabs lose their shared pill and spread out, each its own pill with a thin
+   black outline and light black text. */
+.app.acm .header {
+  border-bottom-color: transparent;
+}
+
+.app.acm .tab-bar {
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.app.acm .tab {
+  border: 1px solid #000;
+  color: #000;
+  font-weight: 300;
+}
+
+/* A gauge in the top left: a thick black half circle with a thin black needle.
+   Placeholder only: it doesn't measure anything yet. */
+.acm-gauge {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+  width: 200px;
+  height: auto;
+}
+
+.acm-gauge-arc {
+  fill: none;
+  stroke: #000;
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+
+.acm-gauge-needle {
+  stroke: #000;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+/* Four blank rounded white panels in a square in the top right. */
+.acm-panels {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  display: grid;
+  grid-template-columns: repeat(2, 180px);
+  grid-auto-rows: 140px;
+  gap: 16px;
+}
+
+.acm-panel {
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
 /* Equal side columns keep the tab bar centered on the page, whatever the brand's width. */
 .header {
   display: grid;
@@ -56,10 +200,10 @@ button.brand {
   /* Half the pill's 54px height, so the corners can ease square when the menu opens. */
   border-radius: 27px;
   background: #fff;
-  /* A light shadow lifts the pill off the page, like the tab bar. */
+  /* A deep shadow lifts the pill well off the map, like the tab bar here. */
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.06),
-    0 4px 12px rgba(0, 0, 0, 0.06);
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 12px 32px rgba(0, 0, 0, 0.18);
   /* On closing, the corners wait for the menu to slide back up before rounding. */
   transition:
     border-radius 0.12s ease 0.22s,
@@ -148,6 +292,30 @@ button.brand {
   cursor: pointer;
 }
 
+/* Map's profile picture in the header's right column, as tall as the brand pill
+   and with its shadow. The placeholder silhouette is cropped by the circle. */
+.profile-button {
+  justify-self: end;
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #d4d4d4;
+  border-radius: 50%;
+  background: #e5e5e5;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 12px 32px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+}
+
+.profile-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: #a3a3a3;
+}
+
 .login-icon {
   width: 22px;
   height: 22px;
@@ -197,6 +365,13 @@ button.brand {
     0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
+/* On Map, the bar floats over the map with the brand pill's deeper shadow. */
+.dashboard .tab-bar {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
 .tab {
   padding: 6px 16px;
   white-space: nowrap;
@@ -229,6 +404,104 @@ button.brand {
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
+}
+
+/* Dashboard's side panel: the student's year in a soft blue pill under the
+   title, then a collapsible section per stat. */
+.student-year {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: #dcebfd;
+  color: #1765c2;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+/* Space only above the first bar. Folded sections stack with no gap, each bar
+   sharing its top line with the bottom line of the one above. */
+.stat-section:first-of-type {
+  margin-top: 24px;
+}
+
+.stat-section + .stat-section {
+  margin-top: -1px;
+}
+
+/* Each header is a gray bar across the whole side panel, reaching past its
+   24px padding, and the whole bar is the button. */
+.stat-heading {
+  margin: 0 -24px;
+}
+
+.stat-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  background: #f5f5f5;
+  color: #3a3a3a;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.stat-toggle:hover {
+  background: #eeeeee;
+}
+
+.stat-toggle:focus-visible {
+  outline: 2px solid #287ce2;
+  outline-offset: -2px;
+}
+
+/* A filled triangle that points right while the section is folded away, and
+   turns down and soft blue while it's showing. */
+.stat-arrow {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  fill: #8a8a8a;
+  transition:
+    transform 0.2s ease,
+    fill 0.2s ease;
+}
+
+.stat-toggle[aria-expanded='true'] .stat-arrow {
+  fill: #8ebdf7;
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-arrow {
+    transition: none;
+  }
+}
+
+.stat-body {
+  padding: 24px 0 12px;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-note {
+  margin: 2px 0 0;
+  color: #5a5a5a;
+  font-size: 0.75rem;
 }
 
 /* The Courses page's search box, sized to the side panel. */
@@ -384,25 +657,83 @@ button.brand {
   font-weight: 600;
 }
 
-/* Dashboard page: a panel in the main area holding a small map of a few
-   connected nodes, drawn like the course map. */
+/* Dashboard page: a folded map that fills the main area down to the bottom of
+   the window, outlined in blue with a soft blue inside. Thin blue creases split
+   it into three equal folds, with a small upright map of a few connected nodes,
+   drawn like the course map, in the middle one. */
+.main.fill {
+  display: flex;
+  flex-direction: column;
+}
+
 .dashboard-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 24px 32px;
 }
 
 .dashboard-map {
-  padding: 24px;
-  border: 1px solid #d4d4d4;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: hidden;
+  border: 2px solid #398df3;
   border-radius: 16px;
-  background: #fff;
+  background: #eef6ff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+.dashboard-fold {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+.dashboard-fold + .dashboard-fold {
+  border-left: 1px solid #8ebdf7;
+}
+
+.dashboard-fold-route {
+  justify-content: center;
+  padding: 24px;
+}
+
+.dashboard-subpanel {
+  flex: 1;
+  border: 1px solid #d4e4f7;
+  border-radius: 12px;
+  background: #fff;
+}
+
+/* On narrow screens the folds stack, with the creases running across. */
+@media (max-width: 900px) {
+  .dashboard-map {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-fold + .dashboard-fold {
+    border-left: 0;
+    border-top: 1px solid #8ebdf7;
+  }
+
+  .dashboard-subpanel {
+    min-height: 80px;
+  }
+
+  .dashboard-map svg {
+    flex: none;
+    height: auto;
+  }
+}
+
+/* Fills the middle fold, scaled to fit and centered. */
 .dashboard-map svg {
   display: block;
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  height: auto;
-  max-height: 70vh;
 }
 
 .dashboard-map-links line {

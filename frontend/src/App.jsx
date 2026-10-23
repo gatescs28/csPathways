@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import logo from './assets/branding/logo-1.svg'
+import Acm from './Acm.jsx'
 import Careers from './Careers.jsx'
 import CourseList from './CourseList.jsx'
 import CourseNetwork from './CourseNetwork.jsx'
@@ -8,6 +9,7 @@ import ParallelPaths from './ParallelPaths.jsx'
 import Courses from './Courses.jsx'
 import Dashboard from './Dashboard.jsx'
 import SearchField from './SearchField.jsx'
+import StudentStats from './StudentStats.jsx'
 
 const TABS = [
   'Map',
@@ -22,10 +24,12 @@ const TABS = [
 const HOME_TAB = 0
 const COURSES_TAB = 1
 const CAREERS_TAB = 2
+const ACM_TAB = 4
 const COURSE_LIST_TAB = 6
 const DASHBOARD_TAB = 7
-// Not a tab: reached from the login icon in the header.
+// Not tabs: reached from the login icon and, on Map, the profile picture in the header.
 const LOGIN_PAGE = 'login'
+const PROFILE_PAGE = 'profile'
 
 function App() {
   const [activeTab, setActiveTab] = useState(0)
@@ -35,7 +39,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   // The course clicked on the map, kept highlighted and named in the side panel.
   const [selectedCourse, setSelectedCourse] = useState(null)
-  const [graphView, setGraphView] = useState('parallel')
+  const [graphView, setGraphView] = useState('3d')
   const brandArea = useRef(null)
   const isHome = activeTab === HOME_TAB
   const DashboardGraph = graphView === 'parallel' ? ParallelPaths : CourseNetwork
@@ -79,7 +83,7 @@ function App() {
   }
 
   return (
-    <div className={isHome ? 'app dashboard' : 'app'}>
+    <div className={isHome ? 'app dashboard' : activeTab === ACM_TAB ? 'app acm' : 'app'}>
       <header className={isHome && !revealed ? 'header home' : 'header'}>
         <div className={menuOpen ? 'brand-area open' : 'brand-area'} ref={brandArea}>
           <h1 className="site-heading">
@@ -122,6 +126,19 @@ function App() {
             </button>
           ))}
         </nav>
+        {/* Map shows a profile picture here instead, a placeholder for now. */}
+        {isHome && (
+          <button
+            className="profile-button"
+            aria-label="Profile"
+            onClick={() => setActiveTab(PROFILE_PAGE)}
+          >
+            <svg className="profile-placeholder" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="9.5" r="4.5" />
+              <path d="M2 24c0-5.5 4.5-8.5 10-8.5s10 3 10 8.5z" />
+            </svg>
+          </button>
+        )}
         {/* Hidden on Map, where the header bar is hidden. */}
         {activeTab !== HOME_TAB && (
           <button
@@ -152,10 +169,11 @@ function App() {
         )}
         {activeTab === DASHBOARD_TAB && (
           <aside className="sidebar">
-            <h2 className="sidebar-title">Current Stats</h2>
+            <StudentStats />
           </aside>
         )}
-        <main className="main">
+        {/* On Dashboard the page stretches to the bottom of the window. */}
+        <main className={activeTab === DASHBOARD_TAB ? 'main fill' : 'main'}>
           {/* Clicking a course on the map selects it and shows the header line
               and the side panel. */}
           {isHome && (
@@ -178,11 +196,17 @@ function App() {
           )}
           {activeTab === COURSES_TAB && <Courses />}
           {activeTab === CAREERS_TAB && <Careers />}
+          {activeTab === ACM_TAB && <Acm />}
           {activeTab === COURSE_LIST_TAB && <CourseList />}
           {activeTab === DASHBOARD_TAB && <Dashboard />}
           {activeTab === LOGIN_PAGE && (
             <section className="courses-page">
               <h2 className="list-title">Login</h2>
+            </section>
+          )}
+          {activeTab === PROFILE_PAGE && (
+            <section className="courses-page">
+              <h2 className="list-title">Profile</h2>
             </section>
           )}
         </main>
