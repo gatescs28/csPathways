@@ -4,20 +4,21 @@
   min-height: 100vh;
 }
 
-/* ACM page: a test of a Rondesignlab-inspired look. The whole window is a light
-   glowing behind a pane of frosted glass, with no header bar. The first layer is
-   the light, a narrow column of warm glows close together, running from the top
-   of the window to the bottom, and two dark spots beside it. The second is the
-   glass over the whole window: it blurs the light, and a pale sheen and faint
-   streaks catch it like a liquid surface. Both are fixed so they fill the
-   window, behind the page's content. */
-.app.acm {
+/* Ronde style: a test of a Rondesignlab-inspired look, used on ACM and Skill
+   Groupings (rules in docs/rondeDesignRules.md). The whole window is a light
+   glowing behind a pane of frosted glass, with no header bar. The first layer
+   is the light, warm glows close together with white centers and a dark spot
+   or two, laid out differently on each page. The second is the glass over the
+   whole window: it blurs the light, and a pale sheen and faint streaks catch
+   it like a liquid surface. Both are fixed so they fill the window, behind the
+   page's content. */
+.app.ronde {
   position: relative;
   isolation: isolate;
 }
 
-.app.acm::before,
-.app.acm::after {
+.app.ronde::before,
+.app.ronde::after {
   content: '';
   position: fixed;
   inset: 0;
@@ -25,9 +26,15 @@
 }
 
 /* Larger than the window, so its edges stay hidden as it drifts. */
-.app.acm::before {
+.app.ronde::before {
   z-index: -2;
   inset: -8%;
+  animation: ronde-light-drift 24s ease-in-out infinite alternate;
+}
+
+/* ACM: a narrow column of warm glows running from the top of the window to
+   the bottom, with two dark spots beside it. */
+.app.acm::before {
   background:
     radial-gradient(ellipse 6% 10% at 44% 72%, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0) 70%),
     radial-gradient(ellipse 5% 9% at 77% 28%, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0) 70%),
@@ -39,10 +46,26 @@
     radial-gradient(ellipse 16% 38% at 66% 64%, rgba(255, 122, 82, 1), rgba(255, 122, 82, 0) 72%),
     radial-gradient(ellipse 15% 30% at 56% 88%, rgba(255, 204, 84, 1), rgba(255, 204, 84, 0) 72%),
     #faf8f5;
-  animation: acm-light-drift 24s ease-in-out infinite alternate;
 }
 
-.app.acm::after {
+/* Skill Groupings: the glows sweep diagonally instead, from coral in the top
+   right down through amber behind the map to gold and pink at the bottom,
+   away from the side panel's text, with one small dark spot low in the
+   middle. */
+.app.skills::before {
+  background:
+    radial-gradient(ellipse 4% 8% at 47% 90%, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 70%),
+    radial-gradient(ellipse 7% 14% at 68% 36%, #ffffff, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(ellipse 6% 12% at 60% 66%, #ffffff, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(ellipse 30% 22% at 64% 52%, #fffaf0, rgba(255, 250, 240, 0) 72%),
+    radial-gradient(ellipse 18% 26% at 82% 10%, rgba(255, 122, 82, 1), rgba(255, 122, 82, 0) 72%),
+    radial-gradient(ellipse 20% 34% at 70% 38%, rgba(255, 176, 70, 1), rgba(255, 176, 70, 0) 72%),
+    radial-gradient(ellipse 18% 30% at 58% 70%, rgba(255, 204, 84, 1), rgba(255, 204, 84, 0) 72%),
+    radial-gradient(ellipse 16% 22% at 50% 98%, rgba(255, 150, 130, 1), rgba(255, 150, 130, 0) 72%),
+    #faf8f5;
+}
+
+.app.ronde::after {
   z-index: -1;
   background:
     /* A glossy reflection across the top of the pane, like light on a curved surface. */
@@ -73,7 +96,7 @@
 }
 
 /* The light slowly shifts behind the glass. */
-@keyframes acm-light-drift {
+@keyframes ronde-light-drift {
   from {
     transform: translate(0, 0) scale(1);
   }
@@ -82,14 +105,71 @@
   }
 }
 
+/* The style's shared entrances and motion: rising into place, popping in,
+   sweeping a fill out along its path (pathLength 1), turning from
+   --turn-from, drawing in, and a slow pulse outward. */
+@keyframes ronde-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes ronde-pop {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+/* The fade hides the round cap that would sit at the start before the sweep. */
+@keyframes ronde-sweep {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+}
+
+@keyframes ronde-turn {
+  from {
+    transform: rotate(var(--turn-from));
+  }
+}
+
+@keyframes ronde-draw-across {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes ronde-draw-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes ronde-pulse {
+  from {
+    opacity: 0.6;
+    scale: 0.8;
+  }
+  to {
+    opacity: 0;
+    scale: 1.9;
+  }
+}
+
 /* The header's bar goes away, leaving the brand and the tabs on the glass. The
    tabs lose their shared pill and spread out, each its own pill with a thin
    black outline and light black text. Pressing a tab sinks it in a little. */
-.app.acm .header {
+.app.ronde .header {
   border-bottom-color: transparent;
 }
 
-.app.acm .tab-bar {
+.app.ronde .tab-bar {
   gap: 10px;
   padding: 0;
   border: none;
@@ -97,7 +177,7 @@
   box-shadow: none;
 }
 
-.app.acm .tab {
+.app.ronde .tab {
   border: 1px solid #000;
   color: #000;
   font-weight: 300;
@@ -106,12 +186,54 @@
     transform 0.15s ease;
 }
 
-.app.acm .tab:hover:not(.active) {
+.app.ronde .tab:hover:not(.active) {
   background: rgba(0, 0, 0, 0.05);
 }
 
-.app.acm .tab:active {
+.app.ronde .tab:active {
   transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app.ronde::before {
+    animation: none;
+  }
+
+  .app.ronde .tab {
+    transition: none;
+  }
+}
+
+/* On narrower screens the brand sits above the tabs, which wrap, like on Map. */
+@media (max-width: 1100px) {
+  .app.ronde .header {
+    position: relative;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px 32px;
+  }
+
+  .app.ronde .tab-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .app.ronde .login-button {
+    position: absolute;
+    top: 18px;
+    right: 32px;
+  }
+}
+
+/* The header keeps 20px more on the left for the logo, which hangs off its box. */
+@media (max-width: 600px) {
+  .app.ronde .header {
+    padding: 16px 16px 16px 36px;
+  }
+
+  .app.ronde .login-button {
+    right: 16px;
+  }
 }
 
 /* The page fills the window below the header in two halves. On top, the
@@ -179,7 +301,7 @@
   stroke-width: 12;
   stroke-dasharray: 1 1;
   stroke-dashoffset: 0;
-  animation: acm-gauge-sweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+  animation: ronde-sweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
 }
 
 .acm-gauge-inner {
@@ -190,9 +312,10 @@
 
 /* Turns around the hub, at (150, 150) in the gauge's own units. */
 .acm-gauge-needle {
+  --turn-from: -140.2deg;
   transform-box: view-box;
   transform-origin: 150px 150px;
-  animation: acm-needle-sweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+  animation: ronde-turn 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
 }
 
 .acm-gauge-needle line {
@@ -208,24 +331,6 @@
 
 .acm-gauge-hub {
   fill: #000;
-}
-
-/* The fade hides the round cap that would sit at the start before the sweep. */
-@keyframes acm-gauge-sweep {
-  from {
-    stroke-dashoffset: 1;
-    opacity: 0;
-  }
-  6% {
-    opacity: 1;
-  }
-}
-
-/* Starts pointing left, at the start of the fill. */
-@keyframes acm-needle-sweep {
-  from {
-    transform: rotate(-140.2deg);
-  }
 }
 
 /* Four blank panels in a square, beside the gauge: solid white, rounded, and
@@ -251,7 +356,7 @@
     transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.35s ease;
   /* Only before it starts, so the hover lift still works after. */
-  animation: acm-panel-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  animation: ronde-rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 
 .acm-panel:hover {
@@ -272,13 +377,6 @@
 
 .acm-panel:nth-child(4) {
   animation-delay: 0.18s;
-}
-
-@keyframes acm-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
 }
 
 /* Each white panel holds one stat: a muted label, the value large (out of its
@@ -569,7 +667,7 @@
   width: 100%;
   height: 100%;
   overflow: visible;
-  animation: acm-route-across 1.6s linear 0.2s backwards;
+  animation: ronde-draw-across 1.6s linear 0.2s backwards;
 }
 
 .acm-route-lines path {
@@ -605,18 +703,6 @@
   display: none;
 }
 
-@keyframes acm-route-across {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-}
-
-@keyframes acm-route-downward {
-  from {
-    clip-path: inset(0 0 100% 0);
-  }
-}
-
 .acm-route-nodes {
   position: absolute;
   inset: 0;
@@ -635,7 +721,7 @@
   border-radius: 50%;
   background: #000;
   transition: box-shadow 0.2s ease;
-  animation: acm-node-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) var(--delay) backwards;
+  animation: ronde-pop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) var(--delay) backwards;
 }
 
 .acm-route-nodes li.branch {
@@ -696,25 +782,7 @@
   inset: -6px;
   border: 1.5px solid #000;
   border-radius: 50%;
-  animation: acm-node-pulse 2.4s ease-out infinite;
-}
-
-@keyframes acm-node-in {
-  from {
-    opacity: 0;
-    scale: 0.4;
-  }
-}
-
-@keyframes acm-node-pulse {
-  from {
-    opacity: 0.6;
-    scale: 0.8;
-  }
-  to {
-    opacity: 0;
-    scale: 1.9;
-  }
+  animation: ronde-pulse 2.4s ease-out infinite;
 }
 
 /* The class's number, below its node unless the node says otherwise. */
@@ -775,7 +843,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .app.acm::before,
   .acm-gauge-fill,
   .acm-gauge-needle,
   .acm-panel,
@@ -791,7 +858,6 @@
     scale: 1.2;
   }
 
-  .app.acm .tab,
   .acm-panel,
   .acm-route-nodes li,
   .acm-node-title,
@@ -801,27 +867,6 @@
 
   .acm-panel:hover {
     transform: none;
-  }
-}
-
-/* On narrower screens the brand sits above the tabs, which wrap, like on Map. */
-@media (max-width: 1100px) {
-  .app.acm .header {
-    position: relative;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 16px 32px;
-  }
-
-  .app.acm .tab-bar {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .app.acm .login-button {
-    position: absolute;
-    top: 18px;
-    right: 32px;
   }
 }
 
@@ -869,7 +914,7 @@
   }
 
   .acm-route-lines {
-    animation-name: acm-route-downward;
+    animation-name: ronde-draw-down;
   }
 
   .acm-route-across {
@@ -936,17 +981,344 @@
   }
 }
 
-/* The header keeps 20px more on the left for the logo, which hangs off its box. */
 @media (max-width: 600px) {
-  .app.acm .header {
-    padding: 16px 16px 16px 36px;
-  }
-
-  .app.acm .login-button {
-    right: 16px;
-  }
-
   .acm-page {
+    padding: 16px;
+  }
+}
+
+/* Skill Groupings: the Dashboard, mirrored in the Ronde style. The Student
+   Stats side panel becomes a solid white tile standing off the glass, with
+   its sections divided by hairlines instead of gray bars, the year in a black
+   pill, and everything drawn in black on pale tracks: the hours gauge (with
+   ticks and a dotted inner arc), the year rows, and the requirement squares.
+   The folded map loses its outline and creases: its blank panels become solid
+   white tiles in two columns, one of them black, and the small map between
+   them stands alone, with black lines in pale channels and black hubs with
+   white pins (the intro class a hollow ring). The tiles rise in one after
+   another, the gauge sweeps in, and the map draws in from the top with each
+   node appearing as the lines reach it. */
+.app.skills .sidebar {
+  margin: 24px 0 24px 32px;
+  border-right: 0;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 10px 28px rgba(0, 0, 0, 0.08);
+  animation: ronde-rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.app.skills .student-year {
+  background: #000;
+  color: #fff;
+}
+
+.app.skills .stat-toggle {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 0;
+  background: none;
+  color: #000;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  transition: background 0.2s ease;
+}
+
+.app.skills .stat-toggle:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.app.skills .stat-toggle:focus-visible {
+  outline: 2px solid #000;
+}
+
+.app.skills .stat-arrow {
+  fill: rgba(0, 0, 0, 0.3);
+}
+
+.app.skills .stat-toggle[aria-expanded='true'] .stat-arrow {
+  fill: #000;
+}
+
+.app.skills .class-item + .class-item {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.app.skills .class-code {
+  font-weight: 500;
+}
+
+.app.skills .gauge-track {
+  stroke: rgba(0, 0, 0, 0.1);
+}
+
+/* pathLength is 1, so a dash of 1 is the whole fill. */
+.app.skills .gauge-fill {
+  stroke: #000;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+  animation: ronde-sweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
+}
+
+/* Turns around the hub, at (100, 100) in the gauge's own units. */
+.app.skills .gauge-needle {
+  stroke: #000;
+  stroke-width: 2.5;
+  transform-box: view-box;
+  transform-origin: 100px 100px;
+  animation: ronde-turn 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
+}
+
+/* A thick black ring around a small white center: a hub with a pin. */
+.app.skills .gauge-hub {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 6;
+}
+
+.app.skills .gauge-ticks line {
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+.app.skills .gauge-ticks line.major {
+  stroke-width: 2;
+}
+
+.app.skills .gauge-ticks line.passed {
+  stroke: #000;
+}
+
+.app.skills .gauge-inner {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 1.2;
+  stroke-dasharray: 0 4;
+  stroke-linecap: round;
+}
+
+.app.skills .gauge-end {
+  fill: #6b6b6b;
+}
+
+.app.skills .gauge-value {
+  fill: #000;
+}
+
+.app.skills .hours-year {
+  border: 0;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Same size and spacing as the Dashboard's, so the panels still line up. */
+.app.skills .requirement {
+  border: 0;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.app.skills .requirement.complete {
+  background: #000;
+}
+
+.app.skills .requirement:hover,
+.app.skills .requirement:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+.app.skills .requirement-popup {
+  border: 0;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.app.skills .requirement-popup::before {
+  border: 0;
+}
+
+.app.skills .requirement-status::before {
+  border: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.app.skills .requirement-status.complete::before {
+  background: #000;
+}
+
+.app.skills .dashboard-page {
+  padding: 24px 32px 24px 16px;
+}
+
+.app.skills .dashboard-map {
+  gap: 16px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.app.skills .dashboard-fold {
+  padding: 0;
+  gap: 16px;
+}
+
+.app.skills .dashboard-fold + .dashboard-fold {
+  border: 0;
+}
+
+.app.skills .dashboard-fold-route {
+  padding: 24px;
+}
+
+.app.skills .dashboard-subpanel {
+  border: 0;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 10px 28px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s ease;
+  /* Only before it starts, so the hover lift still works after. */
+  animation: ronde-rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.app.skills .dashboard-subpanel:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+.app.skills .dashboard-fold:first-child .dashboard-subpanel:nth-child(1) {
+  animation-delay: 0.06s;
+}
+
+.app.skills .dashboard-fold:first-child .dashboard-subpanel:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.app.skills .dashboard-fold:last-child .dashboard-subpanel:nth-child(1) {
+  animation-delay: 0.18s;
+}
+
+.app.skills .dashboard-fold:last-child .dashboard-subpanel:nth-child(2) {
+  animation-delay: 0.24s;
+}
+
+.app.skills .dashboard-fold:last-child .dashboard-subpanel:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* The page's one black panel, with a faint rim of light along its top edge. */
+.app.skills .dashboard-fold:last-child .dashboard-subpanel:first-child {
+  background: #000;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+.app.skills .dashboard-fold:last-child .dashboard-subpanel:first-child:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+.app.skills .dashboard-map svg {
+  animation: ronde-draw-down 1.4s linear 0.2s backwards;
+}
+
+.app.skills .dashboard-map-channels line {
+  stroke: rgba(0, 0, 0, 0.08);
+  stroke-width: 14;
+  stroke-linecap: round;
+}
+
+.app.skills .dashboard-map-links line {
+  stroke: #000;
+  stroke-width: 3;
+}
+
+/* The stroke sits under the fill, so on hover it shows only as a soft halo
+   around the node. */
+.app.skills .dashboard-map-node {
+  fill: #000;
+  stroke: rgba(0, 0, 0, 0);
+  stroke-width: 10;
+  paint-order: stroke;
+  transition: stroke 0.2s ease;
+}
+
+.app.skills .dashboard-map-node:hover {
+  stroke: rgba(0, 0, 0, 0.12);
+}
+
+.app.skills .dashboard-map-pin {
+  fill: #fff;
+  pointer-events: none;
+}
+
+.app.skills .dashboard-map-stop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ronde-pop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) var(--delay) backwards;
+}
+
+.app.skills .dashboard-fold-route .network-label {
+  border: 0;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app.skills .sidebar,
+  .app.skills .dashboard-subpanel,
+  .app.skills .gauge-fill,
+  .app.skills .gauge-needle,
+  .app.skills .dashboard-map svg,
+  .app.skills .dashboard-map-stop {
+    animation: none;
+  }
+
+  .app.skills .stat-toggle,
+  .app.skills .dashboard-subpanel,
+  .app.skills .dashboard-map-node {
+    transition: none;
+  }
+
+  .app.skills .dashboard-subpanel:hover {
+    transform: none;
+  }
+}
+
+/* On phones the side panel's tile sits above the map, full width. */
+@media (max-width: 720px) {
+  .app.skills .body {
+    flex-direction: column;
+  }
+
+  .app.skills .sidebar {
+    width: auto;
+    margin: 16px 16px 0;
+  }
+
+  .app.skills .dashboard-page {
     padding: 16px;
   }
 }

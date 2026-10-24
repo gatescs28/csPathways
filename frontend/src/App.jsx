@@ -24,6 +24,7 @@ const TABS = [
 const HOME_TAB = 0
 const COURSES_TAB = 1
 const CAREERS_TAB = 2
+const SKILLS_TAB = 3
 const ACM_TAB = 4
 const COURSE_LIST_TAB = 6
 const DASHBOARD_TAB = 7
@@ -42,6 +43,10 @@ function App() {
   const [graphView, setGraphView] = useState('3d')
   const brandArea = useRef(null)
   const isHome = activeTab === HOME_TAB
+  // Skill Groupings mirrors the Dashboard, drawn in the ACM page's style
+  // (docs/rondeDesignRules.md).
+  const isDashboard = activeTab === DASHBOARD_TAB || activeTab === SKILLS_TAB
+  const ronde = activeTab === ACM_TAB || activeTab === SKILLS_TAB
   const DashboardGraph = graphView === 'parallel' ? ParallelPaths : CourseNetwork
 
   // Close the menu on a click outside it or on Escape.
@@ -83,7 +88,17 @@ function App() {
   }
 
   return (
-    <div className={isHome ? 'app dashboard' : activeTab === ACM_TAB ? 'app acm' : 'app'}>
+    <div
+      className={
+        isHome
+          ? 'app dashboard'
+          : activeTab === ACM_TAB
+            ? 'app ronde acm'
+            : activeTab === SKILLS_TAB
+              ? 'app ronde skills'
+              : 'app'
+      }
+    >
       <header className={isHome && !revealed ? 'header home' : 'header'}>
         <div className={menuOpen ? 'brand-area open' : 'brand-area'} ref={brandArea}>
           <h1 className="site-heading">
@@ -167,13 +182,14 @@ function App() {
             )}
           </aside>
         )}
-        {activeTab === DASHBOARD_TAB && (
+        {isDashboard && (
           <aside className="sidebar">
-            <StudentStats />
+            <StudentStats ronde={ronde} />
           </aside>
         )}
-        {/* On Dashboard and ACM the page stretches to the bottom of the window. */}
-        <main className={activeTab === DASHBOARD_TAB || activeTab === ACM_TAB ? 'main fill' : 'main'}>
+        {/* On Dashboard, Skill Groupings, and ACM the page stretches to the
+            bottom of the window. */}
+        <main className={isDashboard || activeTab === ACM_TAB ? 'main fill' : 'main'}>
           {/* Clicking a course on the map selects it and shows the header line
               and the side panel. */}
           {isHome && (
@@ -198,7 +214,7 @@ function App() {
           {activeTab === CAREERS_TAB && <Careers />}
           {activeTab === ACM_TAB && <Acm />}
           {activeTab === COURSE_LIST_TAB && <CourseList />}
-          {activeTab === DASHBOARD_TAB && <Dashboard />}
+          {isDashboard && <Dashboard ronde={ronde} />}
           {activeTab === LOGIN_PAGE && (
             <section className="courses-page">
               <h2 className="list-title">Login</h2>

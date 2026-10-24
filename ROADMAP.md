@@ -48,7 +48,8 @@ Browsing only, with no sign-in. Details will be planned once Phases 1 and 2 are 
 - [x] ACM page: Rondesignlab-style design test (detailed placeholder gauge and four blank white panels)
 - [x] ACM page: black panel and a route of the classes taken in the bottom half (placeholder classes for a junior)
 - [x] ACM page: classes branching off the route, and placeholder stats in the panels
-- [ ] Skill Groupings, ACM, and Source Analysis pages (ACM has placeholders only; the others are empty)
+- [x] Skill Groupings page: a mirror of the Dashboard in the ACM page's style
+- [ ] Skill Groupings, ACM, and Source Analysis pages (ACM and Skill Groupings have placeholders only; Source Analysis is empty)
 
 ## Hosting and deployment (long term)
 - Cloudflare and Vercel are proposed.

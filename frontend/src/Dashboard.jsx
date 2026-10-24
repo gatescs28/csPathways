@@ -2,7 +2,10 @@ import { useLayoutEffect, useRef, useState } from 'react'
 
 // A small map of a few connected nodes on its own panel, drawn like the course
 // map and laid out taller than wide. Placeholder only: each node has a sample
-// class to show on hover, and the links don't mean anything yet.
+// class to show on hover, and the links don't mean anything yet. In the Ronde
+// style (Skill Groupings) the links also get pale channels under them, each
+// node a white pin (a wider one for the intro class, a hollow ring), and each
+// node a --delay for appearing as the map draws in.
 const NODES = [
   { x: 110, y: 120, code: 'CSC 111', title: 'Introduction to Computer Science' },
   { x: 70, y: 300, code: 'CSC 112', title: 'Fundamentals of Computer Science' },
@@ -51,7 +54,7 @@ function NodeLabel({ index, ringRef, foldRef }) {
   )
 }
 
-function Dashboard() {
+function Dashboard({ ronde = false }) {
   const foldRef = useRef(null)
   const ringRef = useRef(null)
   const [hovered, setHovered] = useState(null)
@@ -67,23 +70,36 @@ function Dashboard() {
         </div>
         <div ref={foldRef} className="dashboard-fold dashboard-fold-route">
           <svg viewBox="0 0 400 680" role="img" aria-label="Map of connected classes">
+            {ronde && (
+              <g className="dashboard-map-channels">
+                {LINKS.map(([from, to], i) => (
+                  <line key={i} x1={NODES[from].x} y1={NODES[from].y} x2={NODES[to].x} y2={NODES[to].y} />
+                ))}
+              </g>
+            )}
             <g className="dashboard-map-links">
               {LINKS.map(([from, to], i) => (
                 <line key={i} x1={NODES[from].x} y1={NODES[from].y} x2={NODES[to].x} y2={NODES[to].y} />
               ))}
             </g>
             {NODES.map((node, i) => (
-              <circle
+              <g
                 key={i}
-                className="dashboard-map-node"
-                cx={node.x}
-                cy={node.y}
-                r="11"
-                ref={hovered === i ? ringRef : undefined}
-                aria-label={`${node.code} ${node.title}`}
-                onPointerEnter={() => setHovered(i)}
-                onPointerLeave={() => setHovered(null)}
-              />
+                className="dashboard-map-stop"
+                style={ronde ? { '--delay': `${0.2 + (1.2 * node.y) / 680}s` } : undefined}
+              >
+                <circle
+                  className={i === 0 ? 'dashboard-map-node start' : 'dashboard-map-node'}
+                  cx={node.x}
+                  cy={node.y}
+                  r="11"
+                  ref={hovered === i ? ringRef : undefined}
+                  aria-label={`${node.code} ${node.title}`}
+                  onPointerEnter={() => setHovered(i)}
+                  onPointerLeave={() => setHovered(null)}
+                />
+                {ronde && <circle className="dashboard-map-pin" cx={node.x} cy={node.y} r={i === 0 ? 6 : 3.5} />}
+              </g>
             ))}
           </svg>
           {hovered !== null && <NodeLabel index={hovered} ringRef={ringRef} foldRef={foldRef} />}

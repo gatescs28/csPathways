@@ -1,6 +1,6 @@
 # Ronde Design Rules
 
-Design rules for CourseMap's "Ronde" style, inspired by Rondesignlab. The ACM page is where the style was worked out and tested, and it's the reference implementation (`frontend/src/Acm.jsx` and the ACM section of `frontend/src/App.css`). The site's design isn't final; this is the style being tested.
+Design rules for CourseMap's "Ronde" style, inspired by Rondesignlab. The ACM page is where the style was worked out and tested, and it's the reference implementation (`frontend/src/Acm.jsx` and the ACM section of `frontend/src/App.css`). The Skill Groupings page is a second example: the Dashboard, restyled in Ronde. The site's design isn't final; this is the style being tested.
 
 **These are rules, not a template.** Use them to make new pages and elements feel like part of the same family. Don't rebuild the ACM page's layout (gauge top left, four panels top right, a black panel and a route below) on other pages. Each page should have its own composition, built from the same materials and behaviors.
 
@@ -122,7 +122,9 @@ System sans throughout.
 - Keep text at full contrast: black on white, white or 60% white on black. Never rely on hover alone for information that matters.
 
 ## Building it
-- Scope a page's styles under its app class and a page prefix (like `.app.acm` and `.acm-*`). If a second page adopts the style, pull the shared pieces into shared classes or tokens rather than copying the ACM rules wholesale.
+- **The shared base** is the `.app.ronde` class, set on the app's root for every page in the style: the frosted-glass background, the tabs, the header, the breakpoints for both, and the `ronde-*` keyframes (rise, pop, sweep, turn, draw, pulse). Each page adds its own class beside it (`app ronde acm`, `app ronde skills`) for its glows and its layout. Add new shared pieces to the base rather than copying them into a page.
+- **Scope a page's own styles** under its app class and a page prefix (like `.app.acm` and `.acm-*`).
+- **To restyle an existing page in Ronde** (as Skill Groupings does with the Dashboard), reuse that page's components so the two stay in sync. Restyle them with CSS under the new page's class, and give the components a `ronde` prop only for extra decorative markup the style needs (gauge ticks, map channels, node pins). Never use it to change content or behavior.
 - Placeholder data must be clearly placeholder (say so in code comments and the docs) and agree with the placeholders on other pages, for example the same student year, hours, and classes as the Dashboard.
 - Check every change in the real app at about 1920×1080, 1440×900, 1280×720, 1100, 900, and phone widths. Look for overlaps, overflow, and anything clipped.
 
