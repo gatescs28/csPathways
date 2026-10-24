@@ -42,6 +42,7 @@ Design rules for CourseMap's "Ronde" style, inspired by Rondesignlab. The ACM pa
 - Page padding is 24px top and bottom and 32px at the sides (16px on phones). Gaps between tiles and between regions are 16px.
 - Center a standout visual optically within its region, and let it grow with the window (`clamp()` with `vw`/`vh`), but keep it well inside its region (about 70% at most).
 - Tiles keep their share of the space no matter what they hold (`container-type: size`), and their contents adapt. On very short windows, secondary notes give way before anything overflows.
+- A tall side tile (one with folding sections, for example) keeps to the window's height and scrolls inside itself when it holds more than fits (`contain: size` with `overflow-y: auto`), so it never stretches the page or the regions beside it. On phones, where it stacks above the rest, it grows and the page scrolls. Anything that pops up inside it stays within its visible area.
 - **Breakpoints:**
   - At 1100px and below, the brand sits above the tabs, which wrap.
   - At 720px and below, everything stacks in one column, and horizontal routes run down the page.
@@ -99,6 +100,7 @@ System sans throughout.
 - **Drawing:** draw lines in percentage coordinates (`viewBox="0 0 100 100"`, `preserveAspectRatio="none"`) with `vector-effect: non-scaling-stroke`, and place nodes as HTML so they never stretch. Give phones their own positions rather than squeezing the desktop layout.
 
 ## Header and tabs
+- The logo is the smoked-glass one (`rondeLogo-header.png`, trimmed from `rondeLogo.png`), drawn to match Logo 1's size and position so the header doesn't shift between pages.
 - On these pages, the header loses its bottom line, and the tabs lose their shared pill. Each tab is its own pill with a 1px black outline and light black text.
 - On hover, a tab gets a 5% black fill. The current tab gets the site's gray (`#e5e5e5`). Pressing a tab sinks it (`scale: 0.96`).
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import logo from './assets/branding/logo-1.svg'
+import rondeLogo from './assets/branding/rondeLogo-header.png'
 import Acm from './Acm.jsx'
 import Careers from './Careers.jsx'
 import CourseList from './CourseList.jsx'
@@ -66,10 +67,15 @@ function App() {
     }
   }, [menuOpen])
 
+  // The Ronde pages use the smoked-glass logo.
   const brandContent = (
     <>
       <span className="logo">
-        <img src={logo} alt="" width="64" height="48" />
+        {ronde ? (
+          <img src={rondeLogo} alt="" width="52" height="42" />
+        ) : (
+          <img src={logo} alt="" width="64" height="48" />
+        )}
       </span>
       <span className="site-title">CourseMap</span>
     </>

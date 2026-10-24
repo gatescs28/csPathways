@@ -115,7 +115,8 @@ function TotalHours({ ronde }) {
 // A calendar-style grid with one square per requirement: filled once it's
 // complete, pale and outlined until then. Hovering or focusing a square opens
 // a panel under its row saying what the requirement is, or over the row when
-// there isn't room below it in the window.
+// there isn't room below it in the window or in the side panel, where that
+// scrolls inside itself (on Skill Groupings).
 function MajorRequirements() {
   const [active, setActive] = useState(null)
   const [above, setAbove] = useState(false)
@@ -128,8 +129,10 @@ function MajorRequirements() {
   useLayoutEffect(() => {
     if (active === null) {
       setAbove(false)
-    } else if (!above && popupRef.current.getBoundingClientRect().bottom > window.innerHeight - 8) {
-      setAbove(true)
+    } else if (!above) {
+      const panel = popupRef.current.closest('.sidebar')
+      const bottom = Math.min(window.innerHeight, panel.getBoundingClientRect().bottom)
+      if (popupRef.current.getBoundingClientRect().bottom > bottom - 8) setAbove(true)
     }
   }, [active, above])
 
