@@ -26,6 +26,9 @@ Browsing only, with no sign-in. Details will be planned once Phases 1 and 2 are 
 - [x] Map menu: extends the logo-and-title pill, options highlight on hover, current page in a soft blue pill
 - [x] Map menu: slides smoothly out of the pill and back, options a little lower below the pill
 - [x] First tab renamed "Map"; new last tab "Dashboard" with a "Current Stats" sidebar and a panel with a small placeholder map of a few connected nodes
+- [x] Dashboard sidebar: Classes Taken list, Total Hours by year (out of 120), and a Major Requirements grid (placeholder values)
+- [x] Dashboard sidebar: hours gauge out of 120, and a hover panel on each requirement square (placeholder classes and 300-level hours)
+- [x] Dashboard route map: hovering a node shows its sample class
 - [x] Map: Parallel paths 2D preview with blue selection highlights and a bottom-left switch to the existing 3D graph
 - [ ] Map: finish reviewing and refining the connection graph design
 - [ ] Map course map: replace the placeholder links with real connections once Phase 2 decides them
@@ -37,9 +40,15 @@ Browsing only, with no sign-in. Details will be planned once Phases 1 and 2 are 
 - [x] Courses search bar: the look only
 - [ ] Courses search bar: make it filter the courses
 - [x] Careers tab: every career as a pill, four per row
+- [x] Careers search bar: the look only
+- [x] Filter button on the Courses and Careers search bars (Courses: level and source; Careers: source)
+- [x] Courses and Careers search bars in a light shade of blue
 - [x] Skill Groupings, ACM, and Source Analysis tabs added to the tab bar
 - [x] Login icon in the header (hidden on Map) that opens a blank Login page (look only; sign-in itself is under Later)
-- [ ] Skill Groupings, ACM, and Source Analysis pages (empty for now)
+- [x] ACM page: Rondesignlab-style design test (detailed placeholder gauge and four blank white panels)
+- [x] ACM page: black panel and a route of the classes taken in the bottom half (placeholder classes for a junior)
+- [x] ACM page: classes branching off the route, and placeholder stats in the panels
+- [ ] Skill Groupings, ACM, and Source Analysis pages (ACM has placeholders only; the others are empty)
 
 ## Hosting and deployment (long term)
 - Cloudflare and Vercel are proposed.

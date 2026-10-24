@@ -172,8 +172,8 @@ function App() {
             <StudentStats />
           </aside>
         )}
-        {/* On Dashboard the page stretches to the bottom of the window. */}
-        <main className={activeTab === DASHBOARD_TAB ? 'main fill' : 'main'}>
+        {/* On Dashboard and ACM the page stretches to the bottom of the window. */}
+        <main className={activeTab === DASHBOARD_TAB || activeTab === ACM_TAB ? 'main fill' : 'main'}>
           {/* Clicking a course on the map selects it and shows the header line
               and the side panel. */}
           {isHome && (

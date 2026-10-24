@@ -4,12 +4,13 @@
   min-height: 100vh;
 }
 
-/* ACM page: the whole window is a light glowing behind a pane of frosted glass,
-   with no header bar. The first layer is the light, a narrow column of warm
-   glows close together, running from the top of the window to the bottom, and
-   two dark spots beside it. The second is the glass over the whole window: it
-   blurs the light, and a pale sheen and faint streaks catch it like a liquid
-   surface. Both are fixed so they fill the window, behind the page's content. */
+/* ACM page: a test of a Rondesignlab-inspired look. The whole window is a light
+   glowing behind a pane of frosted glass, with no header bar. The first layer is
+   the light, a narrow column of warm glows close together, running from the top
+   of the window to the bottom, and two dark spots beside it. The second is the
+   glass over the whole window: it blurs the light, and a pale sheen and faint
+   streaks catch it like a liquid surface. Both are fixed so they fill the
+   window, behind the page's content. */
 .app.acm {
   position: relative;
   isolation: isolate;
@@ -81,15 +82,9 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .app.acm::before {
-    animation: none;
-  }
-}
-
 /* The header's bar goes away, leaving the brand and the tabs on the glass. The
    tabs lose their shared pill and spread out, each its own pill with a thin
-   black outline and light black text. */
+   black outline and light black text. Pressing a tab sinks it in a little. */
 .app.acm .header {
   border-bottom-color: transparent;
 }
@@ -106,46 +101,854 @@
   border: 1px solid #000;
   color: #000;
   font-weight: 300;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
 }
 
-/* A gauge in the top left: a thick black half circle with a thin black needle.
-   Placeholder only: it doesn't measure anything yet. */
+.app.acm .tab:hover:not(.active) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.app.acm .tab:active {
+  transform: scale(0.96);
+}
+
+/* The page fills the window below the header in two halves. On top, the
+   panels fill the right half and the gauge sits in the middle of the left.
+   Below, the black panel fills the first 35% and the route the rest. On
+   narrow screens everything stacks. */
+.acm-page {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 35fr 15fr 50fr;
+  grid-template-rows: minmax(240px, 1fr) minmax(240px, 1fr);
+  row-gap: 16px;
+  padding: 24px 32px;
+}
+
+/* A dial standing on its own, mostly black: fine ticks around a thick channel,
+   filled solid black up to the needle with a white dot at its end, and a fine
+   dotted arc inside it. The ticks the fill has passed are black and the rest
+   are pale. The needle has a short tail behind its black hub, which has a
+   white pin like the map's hollow nodes. When the page opens, the fill sweeps
+   out from the left and the needle turns with it. Placeholder only: it doesn't
+   measure anything yet. */
+/* It grows with the window but stays well inside its quarter, never taller
+   than about 70% of it. Its quarter starts at the page's 32px padding, so it
+   moves 16px left to sit halfway between the window's edge and the panels. */
 .acm-gauge {
-  position: absolute;
-  top: 24px;
-  left: 32px;
-  width: 200px;
+  grid-column: 1 / 3;
+  grid-row: 1;
+  place-self: center;
+  translate: -16px 0;
+  display: block;
+  width: clamp(240px, min(30vw, 60vh - 70px), 480px);
   height: auto;
 }
 
-.acm-gauge-arc {
-  fill: none;
-  stroke: #000;
-  stroke-width: 10;
+.acm-gauge-ticks line {
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-width: 1.5;
   stroke-linecap: round;
 }
 
+.acm-gauge-ticks line.major {
+  stroke-width: 2.5;
+}
+
+.acm-gauge-ticks line.passed {
+  stroke: #000;
+}
+
+.acm-gauge-track,
+.acm-gauge-fill,
+.acm-gauge-inner {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.acm-gauge-track {
+  stroke: rgba(0, 0, 0, 0.1);
+  stroke-width: 12;
+}
+
+/* pathLength is 1, so a dash of 1 is the whole fill. */
+.acm-gauge-fill {
+  stroke: #000;
+  stroke-width: 12;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+  animation: acm-gauge-sweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+}
+
+.acm-gauge-inner {
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 1.5;
+  stroke-dasharray: 0 5;
+}
+
+/* Turns around the hub, at (150, 150) in the gauge's own units. */
 .acm-gauge-needle {
+  transform-box: view-box;
+  transform-origin: 150px 150px;
+  animation: acm-needle-sweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+}
+
+.acm-gauge-needle line {
   stroke: #000;
   stroke-width: 2.5;
   stroke-linecap: round;
 }
 
-/* Four blank rounded white panels in a square in the top right. */
+.acm-gauge-dot,
+.acm-gauge-pin {
+  fill: #fff;
+}
+
+.acm-gauge-hub {
+  fill: #000;
+}
+
+/* The fade hides the round cap that would sit at the start before the sweep. */
+@keyframes acm-gauge-sweep {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+}
+
+/* Starts pointing left, at the start of the fill. */
+@keyframes acm-needle-sweep {
+  from {
+    transform: rotate(-140.2deg);
+  }
+}
+
+/* Four blank panels in a square, beside the gauge: solid white, rounded, and
+   resting on a soft shadow. Hovering one lifts it a little, and they rise into
+   place one after another when the page opens. */
 .acm-panels {
-  position: absolute;
-  top: 24px;
-  right: 32px;
+  grid-column: 3;
+  grid-row: 1;
   display: grid;
-  grid-template-columns: repeat(2, 180px);
-  grid-auto-rows: 140px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
 .acm-panel {
   border-radius: 20px;
   background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 10px 28px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s ease;
+  /* Only before it starts, so the hover lift still works after. */
+  animation: acm-panel-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.acm-panel:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+.acm-panel:nth-child(2) {
+  animation-delay: 0.06s;
+}
+
+.acm-panel:nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+.acm-panel:nth-child(4) {
+  animation-delay: 0.18s;
+}
+
+@keyframes acm-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Each white panel holds one stat: a muted label, the value large (out of its
+   total, smaller and muted, if it has one), and at the bottom a small black
+   picture of it on a pale track, with a note under it. The value shrinks on
+   shorter windows so everything fits. Each panel keeps its share of the space
+   whatever it holds, and on very short windows the note gives way. */
+.acm-stat {
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  padding: clamp(14px, 2.4vh, 22px) clamp(16px, 1.6vw, 24px);
+}
+
+@container (max-height: 124px) {
+  .acm-stat-note {
+    display: none;
+  }
+}
+
+.acm-stat-label {
+  color: #5a5a5a;
+  font-size: 0.8125rem;
+}
+
+.acm-stat-value {
+  margin-top: 4px;
+  font-size: clamp(1.5rem, 4.2vh, 2.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.acm-stat-total {
+  color: #6b6b6b;
+  font-size: 0.45em;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.acm-stat-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.acm-stat-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  color: #5a5a5a;
+  font-size: 0.75rem;
+}
+
+/* Classes taken: a dot per class, filled for the main route and hollow for
+   the branches, like the route's nodes. The note's dots are its key. */
+.acm-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.acm-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #000;
+}
+
+.acm-dot.hollow {
+  background: none;
+  box-shadow: inset 0 0 0 2px #000;
+}
+
+/* A key's dot stays with its words when the note wraps. */
+.acm-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.acm-stat-note .acm-dot {
+  width: 8px;
+  height: 8px;
+}
+
+/* Credit hours: a meter filled up to the total. */
+.acm-meter {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.acm-meter span {
+  display: block;
+  width: calc(var(--share) * 100%);
+  height: 100%;
+  border-radius: inherit;
+  background: #000;
+}
+
+/* Major requirements: a square per requirement, black once it's met. */
+.acm-squares {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 12px));
+  gap: 4px;
+}
+
+.acm-squares span {
+  aspect-ratio: 1;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.acm-squares span.met {
+  background: #000;
+}
+
+/* 300-level hours: a segment per class's worth of hours, with a thin gap
+   between them. */
+.acm-segments {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+
+.acm-segments span {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.acm-segments span:first-child {
+  border-radius: 3px 0 0 3px;
+}
+
+.acm-segments span:last-child {
+  border-radius: 0 3px 3px 0;
+}
+
+.acm-segments span.done {
+  background: #000;
+}
+
+/* The black panel under the gauge, shaped and shadowed like the white ones,
+   with a faint rim of light along its top edge. It holds the student's year
+   in white over a column chart of their hours in each year: thin columns
+   rising from a hairline, each with its hours on top and its year below. The
+   current year's column is white and the rest are gray. */
+.acm-panel.dark {
+  grid-column: 1;
+  grid-row: 2;
+  background: #000;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 10px 28px rgba(0, 0, 0, 0.16);
+  animation-delay: 0.24s;
+}
+
+.acm-panel.dark:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+.acm-year {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: clamp(16px, 2.6vh, 26px) clamp(18px, 1.8vw, 28px);
+  color: #fff;
+}
+
+.acm-year .acm-stat-label,
+.acm-year .acm-stat-note {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.acm-year .acm-stat-note {
+  margin-top: 4px;
+}
+
+.acm-year-chart {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: clamp(12px, 2.4vh, 24px);
+}
+
+.acm-columns {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  min-height: 0;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acm-columns li {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 0;
+}
+
+/* The tallest column leaves room above it for its hours. */
+.acm-column-plot {
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.acm-column-bar {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 24px;
+  height: calc(var(--share) * (100% - 24px));
+  translate: -50% 0;
+  border-radius: 4px 4px 0 0;
+  background: rgba(255, 255, 255, 0.32);
+  transition: background 0.2s ease;
+}
+
+.acm-columns li:hover .acm-column-bar {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.acm-column-value {
+  position: absolute;
+  bottom: calc(var(--share) * (100% - 24px) + 6px);
+  left: 50%;
+  translate: -50% 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.acm-column-label {
+  padding-top: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: clamp(0.6875rem, 0.9vw, 0.75rem);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.acm-columns li.current .acm-column-bar {
+  background: #fff;
+}
+
+.acm-columns li.current .acm-column-value,
+.acm-columns li.current .acm-column-label {
+  color: #fff;
+}
+
+/* The student's route, standing on its own beside the black panel and drawn
+   like the gauge: a black line in a pale channel winds through a node for
+   each core class taken, in order, and a dotted line fades out past the
+   latest one, since the route keeps going. Electives branch off the class
+   they followed on thinner lines with smaller nodes, leaving the route square
+   to it and bending into each class. Each node is a black hub with a white
+   pin, like the gauge's, except the first, the intro class, which is a hollow
+   ring like the map's nodes, and the latest, which has a ring slowly pulsing
+   out from it. Each class's number sits beside its node on the side away from
+   the lines, and hovering or focusing a node shows the class's name in a
+   white pill on the other side. When the page opens, the lines draw in from
+   the start and each node appears as they reach it. The lines stretch with
+   the area, so they're drawn in percentages and keep their widths in screen
+   pixels. */
+.acm-route {
+  position: relative;
+  grid-column: 2 / 4;
+  grid-row: 2;
+}
+
+.acm-route-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: acm-route-across 1.6s linear 0.2s backwards;
+}
+
+.acm-route-lines path {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.acm-route-channel {
+  stroke: rgba(0, 0, 0, 0.08);
+  stroke-width: 14;
+}
+
+.acm-route-line {
+  stroke: #000;
+  stroke-width: 3;
+}
+
+.acm-route-channel.branch {
+  stroke-width: 10;
+}
+
+.acm-route-line.branch {
+  stroke-width: 2;
+}
+
+.acm-route-tail {
+  stroke-width: 3;
+  stroke-dasharray: 0 8;
+}
+
+.acm-route-down {
+  display: none;
+}
+
+@keyframes acm-route-across {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes acm-route-downward {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+.acm-route-nodes {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acm-route-nodes li {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  background: #000;
+  transition: box-shadow 0.2s ease;
+  animation: acm-node-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) var(--delay) backwards;
+}
+
+.acm-route-nodes li.branch {
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+}
+
+/* A soft halo around the hovered node, which comes forward so its pill sits
+   over the nodes after it. */
+.acm-route-nodes li:hover,
+.acm-route-nodes li:focus-visible {
+  z-index: 1;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.12);
+}
+
+.acm-route-nodes li:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+}
+
+/* The white pin. */
+.acm-route-nodes li::before {
+  content: '';
+  position: absolute;
+  inset: 7.5px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.acm-route-nodes li.branch::before {
+  inset: 5px;
+}
+
+/* The first node's pill starts at the node instead of centering on it, so it
+   doesn't spill over the black panel. */
+.acm-route-nodes li.start {
+  --pill-left: -6px;
+  --pill-shift: 0%;
+  background: #fff;
+  box-shadow: inset 0 0 0 5px #000;
+}
+
+.acm-route-nodes li.start:hover,
+.acm-route-nodes li.start:focus-visible {
+  box-shadow:
+    inset 0 0 0 5px #000,
+    0 0 0 5px rgba(0, 0, 0, 0.12);
+}
+
+.acm-route-nodes li.start::before {
+  content: none;
+}
+
+.acm-route-nodes li.latest::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 1.5px solid #000;
+  border-radius: 50%;
+  animation: acm-node-pulse 2.4s ease-out infinite;
+}
+
+@keyframes acm-node-in {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+@keyframes acm-node-pulse {
+  from {
+    opacity: 0.6;
+    scale: 0.8;
+  }
+  to {
+    opacity: 0;
+    scale: 1.9;
+  }
+}
+
+/* The class's number, below its node unless the node says otherwise. */
+.acm-node-code {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  translate: -50% 0;
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.acm-route-nodes li.label-above .acm-node-code {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+
+.acm-route-nodes li.label-right .acm-node-code {
+  top: 50%;
+  left: calc(100% + 8px);
+  translate: 0 -50%;
+}
+
+/* The class's name, in a pill above its node, or below it when the number
+   is above. It eases toward the node as it appears. */
+.acm-node-title {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: var(--pill-left, 50%);
+  translate: var(--pill-shift, -50%) var(--pill-rise, 4px);
+  padding: 6px 14px;
+  white-space: nowrap;
+  pointer-events: none;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 8px 20px rgba(0, 0, 0, 0.1);
+  font-size: 0.8125rem;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    translate 0.2s ease;
+}
+
+.acm-route-nodes li.label-above .acm-node-title {
+  top: calc(100% + 12px);
+  bottom: auto;
+  --pill-rise: -4px;
+}
+
+.acm-route-nodes li:hover .acm-node-title,
+.acm-route-nodes li:focus-visible .acm-node-title {
+  --pill-rise: 0px;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app.acm::before,
+  .acm-gauge-fill,
+  .acm-gauge-needle,
+  .acm-panel,
+  .acm-route-lines,
+  .acm-route-nodes li,
+  .acm-route-nodes li.latest::after {
+    animation: none;
+  }
+
+  /* The latest node's ring holds still, partway out. */
+  .acm-route-nodes li.latest::after {
+    opacity: 0.35;
+    scale: 1.2;
+  }
+
+  .app.acm .tab,
+  .acm-panel,
+  .acm-route-nodes li,
+  .acm-node-title,
+  .acm-column-bar {
+    transition: none;
+  }
+
+  .acm-panel:hover {
+    transform: none;
+  }
+}
+
+/* On narrower screens the brand sits above the tabs, which wrap, like on Map. */
+@media (max-width: 1100px) {
+  .app.acm .header {
+    position: relative;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px 32px;
+  }
+
+  .app.acm .tab-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .app.acm .login-button {
+    position: absolute;
+    top: 18px;
+    right: 32px;
+  }
+}
+
+/* Too narrow for halves: the gauge, the panels in a square, the black panel,
+   and then the route, which runs down the middle of the page with each core
+   class's number and name to the right of its node. The branches go off to
+   the left, with each elective's number above or below its node. These rules
+   come after the wider layout's and match their weight, so they win. */
+@media (max-width: 720px) {
+  .acm-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    align-content: start;
+    gap: 24px;
+  }
+
+  .acm-gauge,
+  .acm-panels,
+  .acm-panel.dark,
+  .acm-route {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .acm-gauge {
+    translate: none;
+    width: min(100%, 360px);
+  }
+
+  .acm-panels {
+    grid-template-rows: none;
+    grid-auto-rows: 168px;
+  }
+
+  .acm-squares {
+    grid-template-columns: repeat(6, minmax(0, 12px));
+  }
+
+  .acm-panel.dark {
+    height: 300px;
+  }
+
+  .acm-route {
+    height: 600px;
+  }
+
+  .acm-route-lines {
+    animation-name: acm-route-downward;
+  }
+
+  .acm-route-across {
+    display: none;
+  }
+
+  .acm-route-down {
+    display: inline;
+  }
+
+  .acm-route-nodes li {
+    left: var(--down-x);
+    top: var(--down-y);
+  }
+
+  .acm-route-nodes li.main .acm-node-code {
+    top: auto;
+    bottom: 50%;
+    left: calc(100% + 14px);
+    translate: 0 0;
+  }
+
+  .acm-route-nodes li.main .acm-node-title {
+    top: 50%;
+    bottom: auto;
+    left: calc(100% + 14px);
+    translate: 0 0;
+    width: max-content;
+    max-width: 170px;
+    padding: 0;
+    white-space: normal;
+    background: none;
+    box-shadow: none;
+    color: #5a5a5a;
+    font-size: 0.75rem;
+    opacity: 1;
+  }
+
+  .acm-route-nodes li.branch {
+    --pill-left: -6px;
+    --pill-shift: 0%;
+  }
+
+  .acm-route-nodes li.branch .acm-node-code {
+    top: calc(100% + 6px);
+    bottom: auto;
+    left: 50%;
+    translate: -50% 0;
+  }
+
+  .acm-route-nodes li.down-label-above .acm-node-code {
+    top: auto;
+    bottom: calc(100% + 6px);
+  }
+
+  .acm-route-nodes li.branch .acm-node-title {
+    top: auto;
+    bottom: calc(100% + 12px);
+  }
+
+  .acm-route-nodes li.down-label-above .acm-node-title {
+    top: calc(100% + 12px);
+    bottom: auto;
+  }
+}
+
+/* The header keeps 20px more on the left for the logo, which hangs off its box. */
+@media (max-width: 600px) {
+  .app.acm .header {
+    padding: 16px 16px 16px 36px;
+  }
+
+  .app.acm .login-button {
+    right: 16px;
+  }
+
+  .acm-page {
+    padding: 16px;
+  }
 }
 
 /* Equal side columns keep the tab bar centered on the page, whatever the brand's width. */
@@ -504,6 +1307,237 @@ button.brand {
   font-size: 0.75rem;
 }
 
+/* Classes Taken: one row per class, code above title. */
+.class-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.class-item {
+  padding: 8px 0;
+  font-size: 0.875rem;
+}
+
+.class-item + .class-item {
+  border-top: 1px solid #efefef;
+}
+
+.class-item:first-child {
+  padding-top: 0;
+}
+
+.class-code {
+  display: block;
+  margin-bottom: 2px;
+  color: #5a5a5a;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Total Hours: the total as a gauge, then a rounded panel per year,
+   year on the left and hours on the right. */
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hours-year {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border: 1px solid #d4e4f7;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 0.875rem;
+}
+
+.hours-count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The gauge over the year panels: a pale blue track, filled soft blue up to
+   the total, with a needle and hollow hub drawn like the map's nodes. */
+.hours-gauge {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto 20px;
+}
+
+.gauge-track,
+.gauge-fill {
+  fill: none;
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+
+.gauge-track {
+  stroke: #eef5fe;
+}
+
+.gauge-fill {
+  stroke: #8ebdf7;
+}
+
+.gauge-needle {
+  stroke: #398df3;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.gauge-hub {
+  fill: #fff;
+  stroke: #398df3;
+  stroke-width: 3;
+}
+
+.gauge-end,
+.gauge-value,
+.gauge-label {
+  text-anchor: middle;
+  font-variant-numeric: tabular-nums;
+}
+
+.gauge-end {
+  fill: #8a8a8a;
+  font-size: 10px;
+}
+
+.gauge-value {
+  fill: #1a1a1a;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.gauge-label {
+  fill: #5a5a5a;
+  font-size: 11px;
+}
+
+/* Major Requirements: small rounded squares in a calendar-style grid. A met
+   requirement is filled soft blue; an unmet one is a much paler blue with an
+   outline in the filled color. */
+.requirement-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 22px);
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.requirement {
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  border: 1.5px solid #8ebdf7;
+  border-radius: 5px;
+  background: #eef5fe;
+}
+
+.requirement.complete {
+  background: #8ebdf7;
+}
+
+.requirement:hover,
+.requirement:focus-visible {
+  outline: 2px solid #398df3;
+  outline-offset: 1px;
+}
+
+/* The hovered requirement's panel, just under its row, with a small pointer
+   up to the square. It floats over what's below instead of pushing it down. */
+.requirement-chart {
+  position: relative;
+}
+
+.requirement-popup {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 240px;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1px solid #d4e4f7;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  pointer-events: none;
+}
+
+.requirement-popup::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: calc(var(--pointer-left) - 5px);
+  width: 10px;
+  height: 10px;
+  border-top: 1px solid #d4e4f7;
+  border-left: 1px solid #d4e4f7;
+  background: #fff;
+  transform: rotate(45deg);
+}
+
+/* Over the row instead, with the pointer down to the square. */
+.requirement-popup.above {
+  transform: translateY(-100%);
+}
+
+.requirement-popup.above::before {
+  top: auto;
+  bottom: -6px;
+  border: 0;
+  border-right: 1px solid #d4e4f7;
+  border-bottom: 1px solid #d4e4f7;
+}
+
+.requirement-popup p {
+  margin: 0;
+}
+
+.requirement-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.requirement-popup .requirement-detail {
+  margin-top: 2px;
+  color: #5a5a5a;
+  font-size: 0.75rem;
+}
+
+/* Status in words with a small matching square, so it's never color alone. */
+.requirement-popup .requirement-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: #3a3a3a;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.requirement-status::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  box-sizing: border-box;
+  border: 1.5px solid #8ebdf7;
+  border-radius: 3px;
+  background: #eef5fe;
+}
+
+.requirement-status.complete::before {
+  background: #8ebdf7;
+}
+
 /* The Courses page's search box, sized to the side panel. */
 .search-field.sidebar-search {
   width: 100%;
@@ -696,8 +1730,17 @@ button.brand {
 }
 
 .dashboard-fold-route {
+  position: relative;
   justify-content: center;
   padding: 24px;
+}
+
+/* The hovered node's class. Long names wrap to fit the fold. */
+.dashboard-fold-route .network-label {
+  max-width: calc(100% - 16px);
+  box-sizing: border-box;
+  border-radius: 16px;
+  white-space: normal;
 }
 
 .dashboard-subpanel {
@@ -743,6 +1786,7 @@ button.brand {
 }
 
 .dashboard-map-node {
+  cursor: default;
   fill: #fff;
   stroke: #398df3;
   stroke-width: 3;
@@ -810,12 +1854,156 @@ button.brand {
   font-variant-numeric: tabular-nums;
 }
 
+/* The light blue bar on the Courses and Careers pages: the search box centered,
+   with the filter button at the far right. Equal side columns keep the box
+   centered whatever the button's width. */
 .search-bar {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 560px) 1fr;
+  align-items: center;
+  gap: 16px;
   padding: 16px 32px;
-  background: #f2f2f2;
-  border-bottom: 1px solid #e5e5e5;
+  background: #eef6ff;
+  border-bottom: 1px solid #d4e4f7;
+}
+
+.search-bar > .search-field {
+  grid-column: 2;
+  width: auto;
+}
+
+.filter-area {
+  position: relative;
+  justify-self: end;
+}
+
+/* A white rounded square, outlined like the search box, holding the icon in
+   the logo's blue. */
+.filter-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.filter-button:focus-visible {
+  outline: 2px solid #287ce2;
+  outline-offset: 2px;
+}
+
+/* Three equal thin lines, each with a hollow ring at a different point along it. */
+.filter-button svg {
+  width: 32px;
+  height: 32px;
+  fill: none;
+  stroke: #398df3;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.filter-button:hover svg {
+  stroke: #1765c2;
+}
+
+/* How many filters are on, in a small badge on the square's corner. */
+.filter-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #398df3;
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The dropdown, under the button and lined up with its right edge. It floats
+   over the page and stays above the pills. */
+.filter-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  width: 240px;
+  max-height: 70vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 1px solid #d4d4d4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.filter-set + .filter-set {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #efefef;
+}
+
+.filter-title {
+  margin: 0 0 6px;
+  color: #5a5a5a;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.filter-option input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #398df3;
+}
+
+.filter-clear {
+  width: 100%;
+  margin-top: 14px;
+  padding: 7px 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 999px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.filter-clear:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.filter-clear:disabled {
+  color: #a0a0a0;
+  cursor: default;
+}
+
+.list-empty {
+  margin: 16px 0 0;
+  color: #5a5a5a;
+  font-size: 0.875rem;
 }
 
 .search-field {
